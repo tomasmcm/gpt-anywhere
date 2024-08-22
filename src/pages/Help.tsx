@@ -23,14 +23,14 @@ function Help() {
     <Box p={4}>
       <Heading>Help</Heading>
       <Heading size="md" color="whiteAlpha.600" fontWeight="normal">
-        Getting Started with GPT Anywhere
+        Getting Started with OmniQuery
       </Heading>
       <Stack spacing={4} mt={4}>
-        <Section title="Open/Close GPT Anywhere">
+        <Section title="Open/Close OmniQuery">
           <Text>
-            To open GPT Anywhere, use the keyboard shortcut{" "}
-            <Code>Ctrl + Shift + /</Code> or <Code>Cmd + Shift + /</Code> on
-            Mac. This will open the main prompting window. You can close this
+            To open OmniQuery, use the keyboard shortcut{" "}
+            <Code>Opt + Space</Code>{" "}
+            This will open the main prompting window. You can close this
             window by pressing the same keyboard shortcut again.
           </Text>
           <Text>
@@ -38,18 +38,18 @@ function Help() {
           </Text>
         </Section>
 
-        <Section title="Configure GPT Anywhere">
+        <Section title="Configure OmniQuery">
           <Text>
-            To configure GPT Anywhere, click the tray icon and select
+            To configure OmniQuery, click the tray icon and select
             "Settings". In the settings window, you can configure your API key,
             response timeout, and max tokens per request.
           </Text>
         </Section>
 
-        <Section title="Using GPT Anywhere">
+        <Section title="Using OmniQuery">
           <Text>
-            To use GPT Anywhere, type your prompt into the main window and press
-            enter. GPT Anywhere will then send your prompt to the OpenAI API and
+            To use OmniQuery, type your prompt into the main window and press
+            enter. OmniQuery will then send your prompt to the OpenAI API and
             display the response in the main window.
           </Text>
         </Section>

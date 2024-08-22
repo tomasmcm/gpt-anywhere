@@ -1,8 +1,8 @@
 [package]
-name = "gpt-anywhere"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "omni-query"
+version = "1.0.0"
+description = "OpenAI and Anthropic LLMs when you need them"
+authors = ["JinayJain", "tomasmcm"]
 license = ""
 repository = ""
 edition = "2021"

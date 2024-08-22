@@ -79,7 +79,7 @@ function App() {
               size="sm"
               leftIcon={<NotAllowedIcon />}
               onClick={reset}
-              colorScheme="red"
+              colorScheme="orange"
             >
               Reset Chat
             </Button>

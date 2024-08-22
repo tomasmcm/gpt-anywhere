@@ -83,7 +83,7 @@ function Settings() {
       p={4}
     >
       <Heading size="md" color="whiteAlpha.600" fontWeight="normal">
-        GPT Anywhere
+        OmniQuery
       </Heading>
       <Heading>Settings</Heading>
 

@@ -28,9 +28,9 @@ export const STORE_KEY = {
 } as const;
 
 export const FIRST_LOAD_TEXT = `
-## Welcome to GPT Anywhere!
+## Welcome to OmniQuery!
 
-Use the text box above to interact with GPT.  This window can be toggled at any time using the shortcut \`Ctrl+Shift+/\` or \`Cmd+Shift+/\` (on Mac).
+Use the text box above to interact with GPT.  This window can be toggled at any time using the shortcut \`Opt+Space\`.
 
 Before you get started, open the settings menu and enter your API key. You can get an API key from [OpenAI](https://platform.openai.com/account/api-keys).
 `;
@@ -74,7 +74,7 @@ There's also [links](https://www.freecodecamp.org), and
 And if you want to get really crazy, even tables:
 
 Wild Header | Crazy Header | Another Header?
------------- | ------------- | ------------- 
+------------ | ------------- | -------------
 Your content can | be here, and it | can be here....
 And here. | Okay. | I think we get it.
 
@@ -82,7 +82,7 @@ And here. | Okay. | I think we get it.
   - Some are bulleted.
      - With different indentation levels.
         - That look like this.
-        
+
 ![React Logo w/ Text](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png)
 
 `;

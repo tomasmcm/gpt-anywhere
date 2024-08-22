@@ -10,7 +10,7 @@ const ErrorBox = ({ error }: { error: Error }) => {
       <Text>
         Please try again. If the problem persists, please{" "}
         <Link
-          href="https://github.com/jinayjain/gpt-anywhere/issues"
+          href="https://github.com/tomasmcm/omni-query/issues"
           isExternal
           color="blue.500"
         >
