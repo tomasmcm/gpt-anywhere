@@ -131,7 +131,7 @@ function Search({
           <InputGroup size="lg">
             <Input
               ref={inputRef}
-              placeholder="Unleash your creativity"
+              placeholder="Ask me anything"
               onChange={(e) => setPrompt(e.target.value)}
               value={prompt}
               autoFocus
