@@ -14,7 +14,7 @@ function CopyButton({
 
   return (
     <Button
-      colorScheme="green"
+      colorScheme="orange"
       onClick={() => {
         onCopy();
         setIsCopied(true);

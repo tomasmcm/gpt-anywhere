@@ -15,20 +15,20 @@ import {
   NumberInputStepper,
   Slider,
   SliderFilledTrack,
-  SliderMark,
   SliderThumb,
   SliderTrack,
   Stack,
-  Text,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { DEFAULT_MAX_TOKENS, DEFAULT_TIMEOUT, STORE_KEY } from "../util/consts";
+import { DEFAULT_MAX_TOKENS, DEFAULT_TIMEOUT, STORE_KEY, DEFAULT_OPENAI_BASE_URL } from "../util/consts";
 import store from "../util/store";
 
 function Settings() {
   const toast = useToast();
   const [openAiKey, setOpenAiKey] = useState<string | null>(null);
+  const [openAiBaseUrl, setOpenAiBaseUrl] = useState<string | null>(null);
   const [anthropicKey, setAnthropicKey] = useState<string | null>(null);
   const [timeout, setTimeout] = useState<number | null>(null);
   const [maxTokens, setMaxTokens] = useState<number | null>(null);
@@ -38,6 +38,9 @@ function Settings() {
       const openAiKey: string | null = await store.get(
         STORE_KEY.OPENAI_API_KEY
       );
+      const openAiBaseUrl: string | null = await store.get(
+        STORE_KEY.OPENAI_BASE_URL
+      );
       const anthropicKey: string | null = await store.get(
         STORE_KEY.ANTHROPIC_API_KEY
       );
@@ -45,6 +48,7 @@ function Settings() {
       const maxTokens: number | null = await store.get(STORE_KEY.MAX_TOKENS);
 
       setOpenAiKey(openAiKey);
+      setOpenAiBaseUrl(openAiBaseUrl);
       setAnthropicKey(anthropicKey);
       setTimeout(timeout ?? DEFAULT_TIMEOUT);
       setMaxTokens(maxTokens ?? DEFAULT_MAX_TOKENS);
@@ -55,6 +59,7 @@ function Settings() {
 
   const handleSave = async () => {
     await store.set(STORE_KEY.OPENAI_API_KEY, openAiKey);
+    await store.set(STORE_KEY.OPENAI_BASE_URL, openAiBaseUrl);
     await store.set(STORE_KEY.ANTHROPIC_API_KEY, anthropicKey);
     await store.set(STORE_KEY.TIMEOUT, timeout ?? DEFAULT_TIMEOUT);
     await store.set(STORE_KEY.MAX_TOKENS, maxTokens ?? DEFAULT_MAX_TOKENS);
@@ -70,7 +75,13 @@ function Settings() {
   };
 
   return (
-    <Box p={4}>
+    <VStack
+      height="100vh"
+      overflowY="auto"
+      spacing={4}
+      align="stretch"
+      p={4}
+    >
       <Heading size="md" color="whiteAlpha.600" fontWeight="normal">
         GPT Anywhere
       </Heading>
@@ -98,7 +109,21 @@ function Settings() {
           </FormHelperText>
         </FormControl>
 
-        {/* <FormControl>
+        <FormControl>
+          <FormLabel>OpenAI Base URL</FormLabel>
+          <Input
+            type="text"
+            placeholder="https://api.openai.com"
+            value={openAiBaseUrl || DEFAULT_OPENAI_BASE_URL}
+            onChange={(e) => setOpenAiBaseUrl(e.target.value)}
+            isRequired
+          />
+          <FormHelperText>
+            Base URL for OpenAI API. Note it should NOT end with "/"
+          </FormHelperText>
+        </FormControl>
+
+        <FormControl>
           <FormLabel>Anthropic API Key</FormLabel>
           <Input
             type="password"
@@ -117,8 +142,9 @@ function Settings() {
               Anthropic's website
             </Link>
           </FormHelperText>
-        </FormControl> */}
+        </FormControl>
 
+        {/*
         <FormControl>
           <FormLabel>Timeout</FormLabel>
           <FormHelperText>
@@ -158,6 +184,7 @@ function Settings() {
             </NumberInput>
           </HStack>
         </FormControl>
+        */}
 
         <FormControl>
           <FormLabel>Max Tokens</FormLabel>
@@ -207,7 +234,7 @@ function Settings() {
           Save
         </Button>
       </Stack>
-    </Box>
+    </VStack>
   );
 }
 

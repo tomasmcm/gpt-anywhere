@@ -151,7 +151,7 @@ function Search({
           <Tooltip label="Generate" aria-label="Generate" hasArrow>
             <IconButton
               size="lg"
-              colorScheme="green"
+              colorScheme="orange"
               aria-label="Generate"
               icon={<BsChatRightFill />}
               type="submit"
@@ -162,7 +162,7 @@ function Search({
           <Tooltip label="Options" aria-label="Options" hasArrow>
             <IconButton
               size="lg"
-              colorScheme="green"
+              colorScheme="orange"
               aria-label="Options"
               icon={showOptions ? <ChevronUpIcon /> : <ChevronDownIcon />}
               onClick={() => setShowOptions(!showOptions)}
@@ -179,12 +179,12 @@ function Search({
               aria-label="temperature"
               min={0}
               max={2}
-              step={0.01}
+              step={0.1}
               value={temperature}
               onChange={(value) => setTemperature(value)}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              colorScheme="red"
+              colorScheme="orange"
               flex={2}
             >
               <SliderTrack>
@@ -215,7 +215,7 @@ function Search({
             </Select>
             <Button
               leftIcon={<Icon as={SettingsIcon} />}
-              colorScheme="green"
+              colorScheme="orange"
               variant="outline"
               onClick={onSettings}
               size="sm"

@@ -25,17 +25,17 @@ pub const MAIN_WINDOW: WindowParams = WindowParams {
     label: "main",
     title: "Main",
     url: "index.html",
-    min_width_height: Some((500, 300)),
+    min_width_height: Some((480, 240)),
 };
 pub const SETTINGS_WINDOW: WindowParams = WindowParams {
     label: "settings",
     title: "Settings",
     url: "settings.html",
-    min_width_height: Some((500, 300)),
+    min_width_height: Some((480, 240)),
 };
 pub const HELP_WINDOW: WindowParams = WindowParams {
     label: "help",
     title: "Help",
     url: "help.html",
-    min_width_height: Some((500, 300)),
+    min_width_height: Some((480, 240)),
 };

@@ -17,7 +17,7 @@ export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const addPrompt = useCallback(
-    async (prompt: string, temperature: number = 1.0) => {
+    async (prompt: string, temperature: number = 0.8) => {
       const model = (await store.get(STORE_KEY.MODEL)) as keyof typeof MODELS;
       const responseId = generateId();
 
