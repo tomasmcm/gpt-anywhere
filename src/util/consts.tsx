@@ -7,19 +7,20 @@ export const PROMPTS = {
 } as const;
 
 export const MODELS = {
-  "gpt-3.5-turbo": "GPT 3.5 Turbo",
-  "gpt-4-0125-preview": "GPT 4 Turbo",
-  // "claude-3-opus-20240229": "Claude 3 Opus",
-  // "claude-3-sonnet-20240229": "Claude 3 Sonnet",
-  // "claude-3-haiku-20240307": "Claude 3 Haiku",
+  "gpt-4-turbo": "GPT-4 Turbo",
+  "gpt-4o": "GPT-4o",
+  "claude-3-5-sonnet-20240620": "Claude 3 Sonnet",
+  "claude-3-haiku-20240307": "Claude 3 Haiku",
 } as const;
 
 export const SYSTEM_PROMPT = PROMPTS.base;
 export const DEFAULT_MAX_TOKENS = 1000;
 export const DEFAULT_TIMEOUT = 10;
+export const DEFAULT_OPENAI_BASE_URL="https://api.openai.com";
 
 export const STORE_KEY = {
   OPENAI_API_KEY: "openai_api_key",
+  OPENAI_BASE_URL: "openai_base_url",
   ANTHROPIC_API_KEY: "anthropic_api_key",
   MAX_TOKENS: "max_length",
   TIMEOUT: "timeout",

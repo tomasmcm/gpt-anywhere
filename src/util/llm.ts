@@ -1,69 +1,59 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { invoke } from "@tauri-apps/api/tauri";
+import { listen } from "@tauri-apps/api/event";
 import { Message } from "./ai";
 import {
   SYSTEM_PROMPT,
   DEFAULT_MAX_TOKENS,
   STORE_KEY,
   DEFAULT_TIMEOUT,
+  DEFAULT_OPENAI_BASE_URL,
 } from "./consts";
 import store from "./store";
 
-async function processLine(line: string) {
-  const sliced = line.slice(6).trim();
-
-  if (sliced === "[DONE]") {
-    return {
-      done: true,
-    };
-  }
-
-  const data = JSON.parse(sliced);
-  const msg: string = data?.choices?.[0]?.delta?.content;
-
-  if (msg) {
-    return {
-      done: false,
-      message: msg,
-    };
-  }
-
-  return {
-    done: false,
-  };
-}
-
 type SendRequestFn = (
   chat: Message[],
-  controller: AbortController,
   model: string,
   temperature?: number
-) => Promise<Response>;
+) => Promise<{
+  url: string;
+  headers: Record<string, string>;
+  body: string;
+}>;
 
-const sendOpenAiApiRequest: SendRequestFn = async (
+const getRequestData: SendRequestFn = async (
   chat,
-  controller,
+  model,
+  temperature
+) => {
+  if (model.includes("claude")) {
+    return getAnthropicRequestData(chat, model, temperature)
+  } else {
+    return getOpenAIRequestData(chat, model, temperature)
+  }
+}
+
+const getOpenAIRequestData: SendRequestFn = async (
+  chat,
   model,
   temperature
 ) => {
   const apiKey = await store.get(STORE_KEY.OPENAI_API_KEY);
   const max_tokens =
     Number(await store.get(STORE_KEY.MAX_TOKENS)) || DEFAULT_MAX_TOKENS;
-
-  const { signal } = controller;
+  const baseUrl = (await store.get(STORE_KEY.OPENAI_BASE_URL)) || DEFAULT_OPENAI_BASE_URL;
 
   const apiChat = chat.map((msg) => ({
     role: msg.role,
     content: msg.content,
   }));
 
-  return await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
+  return {
+    url: `${baseUrl}/v1/chat/completions`,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
       Accept: "text/event-stream",
     },
-    signal,
     body: JSON.stringify({
       model,
       messages: [
@@ -77,142 +67,96 @@ const sendOpenAiApiRequest: SendRequestFn = async (
       max_tokens,
       temperature,
     }),
-  });
+  }
 };
 
-// const sendAnthropicApiRequest: SendRequestFn = async (
-//   chat,
-//   controller,
-//   model
-// ) => {
-//   const apiKey = (await store.get(STORE_KEY.ANTHROPIC_API_KEY)) as string;
-//   const max_tokens =
-//     Number(await store.get(STORE_KEY.MAX_TOKENS)) || DEFAULT_MAX_TOKENS;
+const getAnthropicRequestData: SendRequestFn = async (
+  chat,
+  model,
+  temperature
+) => {
+  const apiKey = await store.get(STORE_KEY.ANTHROPIC_API_KEY);
+  const max_tokens =
+    Number(await store.get(STORE_KEY.MAX_TOKENS)) || DEFAULT_MAX_TOKENS;
 
-//   const { signal } = controller;
+  const apiChat = chat.map((msg) => ({
+    role: msg.role,
+    content: msg.content,
+  }));
 
-//   const apiChat = chat.map((msg) => ({
-//     role: msg.role,
-//     content: msg.content,
-//   }));
-//   console.log(apiKey);
-
-//   const anthropic = new Anthropic({
-//     apiKey,
-//   });
-
-//   // const message = await anthropic.messages.create({
-//   //   max_tokens: 1024,
-//   //   messages: [{ role: "user", content: "Hello, Claude" }],
-//   //   model: "claude-3-sonnet-20240229",
-//   // });
-
-//   // console.log(message.content);
-
-//   // return await sendOpenAiApiRequest(chat, controller, model);
-//   return await fetch("https://api.anthropic.com/v1/messages", {
-//     method: "POST",
-//     mode: "cors",
-//     headers: {
-//       "Access-Control-Allow-Origin": "*",
-//       "x-api-key": apiKey,
-//       "anthropic-version": "2023-06-01",
-//       "anthropic-beta": "messages-2023-12-15",
-//       "content-type": "application/json",
-//     },
-//     signal,
-//     body: JSON.stringify({
-//       model,
-//       system: SYSTEM_PROMPT,
-//       messages: apiChat,
-//       stream: true,
-//       max_tokens,
-//     }),
-//   });
-// };
-
-async function processBody(
-  reader: ReadableStreamDefaultReader,
-  onChunk: (message: string) => void
-) {
-  let done, value;
-  let data = "";
-  let finalMessage = "";
-  while (!done) {
-    ({ value, done } = await reader.read());
-    // parse value
-    const text = new TextDecoder("utf-8").decode(value);
-    // split lines but keep the delimiter by \r or \n or \r\n
-    const lines = text.split(/(\n|\r|\r\n)/g);
-
-    for (const line of lines) {
-      data += line;
-
-      const regex = /(\r\r|\n\n|\r\n\r\n)$/;
-
-      if (regex.test(data)) {
-        const { done, message } = await processLine(data);
-
-        if (done) {
-          break;
-        }
-
-        if (message) {
-          finalMessage += message;
-          onChunk(message);
-        }
-
-        data = "";
-      }
-    }
+  return {
+    url: "https://api.anthropic.com/v1/messages/",
+    headers: {
+      "x-api-key": apiKey as string,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      system: SYSTEM_PROMPT,
+      messages: apiChat,
+      stream: true,
+      max_tokens,
+      temperature,
+    }),
   }
-
-  console.log(finalMessage);
-  return finalMessage;
-}
+};
 
 async function chatComplete({
   chat,
   onChunk,
   model,
-  temperature = 1.0,
+  temperature = 0.8,
 }: {
   chat: Message[];
   onChunk: (message: string) => void;
   model: string;
   temperature?: number;
 }) {
-  const controller = new AbortController();
+  let finalMessage = "";
 
-  const timeoutSec =
-    Number(await store.get(STORE_KEY.TIMEOUT)) || DEFAULT_TIMEOUT;
-
-  const handle = setTimeout(() => {
-    controller.abort();
-  }, timeoutSec * 1000);
-
-  const res = await sendOpenAiApiRequest(chat, controller, model, temperature);
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      throw new Error("Unauthorized");
+  // Set up listener for stream chunks
+  const unlisten = await listen('stream-chunk', (event: any) => {
+    const chunk = event.payload;
+    console.log('chunk', chunk)
+    try {
+      const lines = chunk.split('\n').filter((line: string) => line.trim() !== '');
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        console.log("line starts with data: ")
+        const message = line.replace(/^data:\s*/, '').trim();
+        if (!message.startsWith('{') || !message.endsWith('}')) continue;
+        console.log("message is JSON")
+        try {
+          const parsed = JSON.parse(message);
+          console.log("parsed", parsed)
+          const content = parsed?.choices?.[0]?.delta?.content ||
+            parsed?.delta?.text || null;
+          if (content) {
+            finalMessage += content;
+            onChunk(content);
+          }
+        } catch (parseError) {
+          console.error('Error parsing JSON:', parseError);
+          console.log(line)
+        }
+      }
+    } catch (error) {
+      console.error('Error processing chunk:', error);
     }
+  });
 
-    throw new Error("Unknown error");
+  try {
+    const params = await getRequestData(chat, model, temperature);
+    await invoke('stream_request', { params });
+  } catch (error) {
+    console.error("Error in stream request:", error);
+    throw error;
+  } finally {
+    await unlisten();
   }
 
-  if (!res.body) {
-    throw new Error("No body");
-  }
-
-  const reader = res.body.getReader();
-
-  const handleChunk = (message: string) => {
-    clearTimeout(handle);
-    onChunk(message);
-  };
-
-  return await processBody(reader, handleChunk);
+  return finalMessage;
 }
 
 export { chatComplete };
