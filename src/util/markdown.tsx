@@ -1,7 +1,6 @@
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { Components } from "react-markdown";
 import { Box, Code, IconButton } from "@chakra-ui/react";
-import { FiCopy } from "react-icons/fi";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark as style } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { writeText } from "@tauri-apps/api/clipboard";

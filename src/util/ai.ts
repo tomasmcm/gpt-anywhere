@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { MODELS, STORE_KEY } from "./consts";
 import store from "./store";
-import { OpenAI } from "openai";
 import { chatComplete } from "./llm";
 
 export interface Message {
@@ -76,21 +75,3 @@ export function useChat() {
     reset,
   };
 }
-
-type CompletionFunction = (params: {
-  chat: Message[];
-  onChunk: (chunk: { id: string; text: string; isFirst: boolean }) => void;
-}) => Promise<void>;
-
-const getOpenAICompletion: CompletionFunction = async ({ chat, onChunk }) => {
-  console.log("getOpenAICompletion");
-
-  let isFirst = true;
-};
-
-const getAnthropicCompletion: CompletionFunction = async ({
-  chat: prompt,
-  onChunk,
-}) => {
-  throw new Error("Function not implemented.");
-};

@@ -1,20 +1,16 @@
 import Search from "../components/Search";
-import { Box, Button, Center, Text } from "@chakra-ui/react";
+import { Box, Button, Center } from "@chakra-ui/react";
 import ResponseBox from "../components/ResponseBox";
 import { memo, useCallback, useState } from "react";
-import { chatComplete } from "../util/llm";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import UnauthorizedErrorBox from "../components/UnauthorizedErrorBox";
 import ErrorBox from "../components/ErrorBox";
-import PromptBox from "../components/PromptBox";
-import useChatLog, { ChatMessage } from "../util/hooks/useChatLog";
-import { NotAllowedIcon, RepeatIcon } from "@chakra-ui/icons";
+import { NotAllowedIcon } from "@chakra-ui/icons";
 import { Message, useChat } from "../util/ai";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [bgClicked, setBgClicked] = useState(false);
-  // const { chatLog, addUser, addAssistant, clearChatLog } = useChatLog();
   const { messages, addPrompt, reset } = useChat();
   const [error, setError] = useState<Error | null>(null);
 
@@ -33,7 +29,7 @@ function App() {
   );
 
   const handleGenerate = useCallback(
-    async (prompt: string, temperature = 1.0) => {
+    async (prompt: string, temperature = 0.8) => {
       if (isLoading || !prompt) {
         return;
       }

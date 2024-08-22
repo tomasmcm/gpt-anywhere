@@ -1,4 +1,4 @@
-import { Box, Heading, IconButton } from "@chakra-ui/react";
+import { Box, IconButton } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 
 function Titlebar() {

@@ -1,6 +1,6 @@
 import { Button, ButtonProps, Icon } from "@chakra-ui/react";
 import { useState } from "react";
-import { FiCheck, FiClipboard, FiCopy } from "react-icons/fi";
+import { FiCheck, FiCopy } from "react-icons/fi";
 
 function CopyButton({
   onCopy,
