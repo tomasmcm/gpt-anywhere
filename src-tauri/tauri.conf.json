@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "GPT Anywhere",
+    "productName": "OmniQuery",
     "version": "0.0.2"
   },
   "tauri": {
@@ -50,7 +50,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "dev.jinay.gpt-anywhere",
+      "identifier": "dev.tomasmcm.omni-query",
       "targets": "all"
     },
     "security": {
@@ -64,13 +64,13 @@
         "label": "main",
         "fullscreen": false,
         "resizable": true,
-        "title": "GPT Anywhere",
+        "title": "OmniQuery",
         "alwaysOnTop": true,
         "center": true,
         "width": 800,
         "height": 600,
-        "minHeight": 300,
-        "minWidth": 400,
+        "minHeight": 240,
+        "minWidth": 480,
         "decorations": false,
         "transparent": true
       }
